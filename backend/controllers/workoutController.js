@@ -15,22 +15,36 @@ const getWorkout = async (req, res) => {
   const workout = await Workout.findOne({ _id: id });
   if (!workout) {
     return res.status(404).json({ Error: "Workout not found!" });
-  }
+  } 
   res.status(200).json(workout);
 };
 
 // POST a new Workout
 const createWorkout = async (req, res) => {
-  const { title, load, reps } = req.body;
-
+  const { title, load, reps, user } = req.body;
+  // let emptyFields = [];
+  // if (!title) {
+  //   emptyFields.push("title");
+  // }
+  // if (!load) {
+  //   emptyFields.push("load");
+  // }
+  // if (!reps) {
+  //   emptyFields.push("resp");
+  // }
+  // if (emptyFields > 0) {
+  //   return res
+  //     .status(400)
+  //     .json({ error: "Please fill in all field", emptyFields });
+  // }
   try {
-    const workout = await Workout.create({ title, load, reps });
+    const workout = await Workout.create({ title, load, reps, user });
     res.status(200).json(workout);
   } catch (error) {
     res.status(400).json({ error: error });
   }
 };
-
+ 
 // Delete a workout
 const deleteWorkout = async (req, res) => {
   const { id } = req.params;
@@ -64,7 +78,7 @@ const updateWorkout = async (req, res) => {
   if (!workout) {
     return res.status(404).json({ error: "No such workout" });
   }
-  
+
   return res.status(200).json({ workout });
 };
 

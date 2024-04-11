@@ -1,4 +1,5 @@
-const WorkoutDetails = ({ workout }) => {
+import formatDistanceToNow from "date-fns/formatDistanceToNow";
+const WorkoutDetails = ({ workout, onDelete, onUpdate }) => {
   return (
     <div className="workout-details">
       <h4>{workout.title}</h4>
@@ -8,7 +9,10 @@ const WorkoutDetails = ({ workout }) => {
       <p>
         <strong>Reps: {workout.reps}</strong>
       </p>
-      <p>{workout.createdAt}</p>
+      <p>
+        {formatDistanceToNow(new Date(workout.createdAt), { addSuffix: true })}
+      </p>
+      <span onClick={onDelete}>Delete</span>
     </div>
   );
 };

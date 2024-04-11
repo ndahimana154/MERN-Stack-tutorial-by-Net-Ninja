@@ -1,14 +1,14 @@
 import { useState } from "react";
-
-const WorkoutForm = () => {
+import { authenticationValues } from "../../auth/isAuthenticated";
+const WorkoutForm = ({ addWorkout }) => {
   const [title, setTitle] = useState("");
   const [load, setLoad] = useState("");
   const [reps, setReps] = useState("");
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const token = authenticationValues();
     const workout = { title, load, reps };
 
     const response = await fetch("http://localhost:3300/api/workouts", {
@@ -16,18 +16,20 @@ const WorkoutForm = () => {
       body: JSON.stringify(workout),
       headers: {
         "Content-Type": "application/json",
+        Authorization: `${token}`,
       },
     });
     const json = await response.json();
-    if (!response.ok) {
-      setError(json.error);
-    }
-    if (response.ok) {
+
+    if (response.status == 200) {
       setTitle("");
       setLoad("");
       setReps("");
-      setError(null);
+      setError("");
       console.log("New workout added");
+      addWorkout(json);
+    } else {
+      setError("Error ");
     }
   };
 
@@ -38,19 +40,25 @@ const WorkoutForm = () => {
       <input
         type="text"
         onChange={(e) => setTitle(e.target.value)}
-        value={title} required
+        value={title}
+        // className={emptyFields.includes("title") ? "error" : ""}
+        required
       />
       <label>Load (in Kg):</label>
       <input
         type="number"
         onChange={(e) => setLoad(e.target.value)}
-        value={load} required
+        value={load}
+        // className={emptyFields.includes("load") ? "error" : ""}
+        required
       />
       <label>Reps:</label>
       <input
         type="number"
         onChange={(e) => setReps(e.target.value)}
-        value={reps} required
+        value={reps}
+        // className={emptyFields.includes("reps") ? "error" : ""}
+        required
       />
 
       <button>Add workout</button>

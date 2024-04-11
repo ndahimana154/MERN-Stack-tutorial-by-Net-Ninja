@@ -1,4 +1,5 @@
 const express = require("express");
+const verifyToken = require("../middlewares/verifyToken");
 const {
   createWorkout,
   getWorkouts,
@@ -9,18 +10,18 @@ const {
 const router = express.Router();
 
 // Get all Workouts
-router.get("/", getWorkouts);
+router.get("/", verifyToken, getWorkouts);
 
 // Get single workout
-router.get("/:id", getWorkout);
-
+router.get("/:id", verifyToken, getWorkout);
+  
 // Post a workout
-router.post("/", createWorkout);
+router.post("/", verifyToken, createWorkout);
 
 // Delete a workout
-router.delete("/:id", deleteWorkout);
+router.delete("/:id", verifyToken, deleteWorkout);
 
 // Update the Workout
-router.patch("/:id", updateWorkout);
+router.patch("/:id", verifyToken, updateWorkout);
 
 module.exports = router;
